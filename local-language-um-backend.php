@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:     Ultimate Member - Local Language
+ * Plugin Name:     Ultimate Member - Local Language Backend
  * Description:     Extension to Ultimate Member for Addition of Browser or User Profile Local Language support to UM Backend.
  * Version:         1.0.0
  * Requires PHP:    7.4
