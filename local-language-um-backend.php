@@ -12,7 +12,7 @@
  * Domain Path:     /languages
  * UM version:      2.3.1
  */
-
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 add_filter( 'um_language_locale', 'my_um_language_locale_fix', 10, 1 );
 
