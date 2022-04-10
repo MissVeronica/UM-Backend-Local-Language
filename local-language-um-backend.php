@@ -21,7 +21,7 @@ add_filter( 'locale',             'my_um_language_locale_fix', 10, 1 );     // F
 function my_um_language_locale_fix( $language_locale ) {
 
     if( isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) && !empty( $_SERVER['HTTP_ACCEPT_LANGUAGE'] )) {
-        $browser_language = str_replace( '-', '_', substr( $_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5 ));
+        $browser_language = str_replace( '-', '_', sanitize_text_field( substr( $_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5 )));
         if( in_array( $browser_language, get_available_languages())) {
             return $browser_language;
         }
