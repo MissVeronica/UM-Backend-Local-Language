@@ -15,7 +15,8 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-add_filter( 'um_language_locale', 'my_um_language_locale_fix', 10, 1 );
+add_filter( 'um_language_locale', 'my_um_language_locale_fix', 10, 1 );     // Backend language
+add_filter( 'locale',             'my_um_language_locale_fix', 10, 1 );     // Frontend language
 
 function my_um_language_locale_fix( $language_locale ) {
 
@@ -28,22 +29,4 @@ function my_um_language_locale_fix( $language_locale ) {
     
     require_once( ABSPATH . 'wp-includes/pluggable.php' );
     return get_user_locale();
-}
-
-add_filter( 'locale', 'um_get_user_locale_custom', 10, 1 );
-
-function um_get_user_locale_custom( $locale ) {
-
-    global $current_user;
-
-    if( isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) && !empty( $_SERVER['HTTP_ACCEPT_LANGUAGE'] )) {
-        $browser_language = str_replace( '-', '_', substr( $_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5 ));
-        if( in_array( $browser_language, get_available_languages())) {
-            return $browser_language;
-        }
-    }
-
-    if( isset( $current_user->ID )) return get_user_locale();
-
-    return $locale;
 }
