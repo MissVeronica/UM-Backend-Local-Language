@@ -3,13 +3,13 @@ Extension to Ultimate Member for Addition of Browser or User Profile Local Langu
 
 Browser language is being used for UM Frontend/Backend if a local language file is available otherwise the language selected in the WP User Profile setup is used. This language switch is valid for all UM Pages including UM Form Designer Pages Profile, Login, Registration and Password reset and Account Pages.
 ## Shortcode for selecting custom localized UM Forms
-Additional shortcode for customizing the frontend where the user designed UM Pages with form id's can be selected depending on the user browsers language code. Pages designed for different language requirements can be hosted on the same URL (WP Page) and the shortcode displays the page according to the user browser language. There is no limit on the number of pages linked by this shortcode.
+Additional shortcode for customizing the frontend where the user designed UM Pages with form id's can be selected depending on the user browser's language code. Pages designed for different language requirements can be hosted on the same URL (WP Page) and the shortcode displays the page according to the user browser language. There is no limit on the number of pages linked by this shortcode.
 
 The shortcode can be used for UM Registration Forms, Profile Forms, Member Directory Forms and Login Forms.
 
 Shortcode example: [um_locale_language_setup en_US 1025 fr_FR 1061 default 1025]
 
-The Form with id 1025 is used for US English users and the Form with id 1061 for French speaking users. For other languages the default English page is being used. This is the only available format with a language code followed by a space and the Form id without quotes and equal signs or separating commas or new lines.
+The Form with id 1025 is used for US English users and the Form with id 1061 for French speaking users. For other languages the default English page 1025 is being used. This is the only available format with a language code followed by a space and the Form id without quotes and equal signs or separating commas or new lines.
 
 This example may be used to replace a page with current UM basic shortcode like: [ultimatemember form_id="1061"]
 
