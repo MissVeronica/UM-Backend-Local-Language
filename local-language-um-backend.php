@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ultimate Member - Local Language Backend/Frontend
  * Description:     Extension to Ultimate Member for Addition of Browser or User Profile Local Language support to UM Backend and Frontend.
- * Version:         1.4.1
+ * Version:         1.4.2
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -45,7 +45,9 @@ function my_um_language_locale_reply( $locale_code = false ) {
     global $current_user;
 
     if( !defined( 'ABSPATH' )) exit;
-    if( !function_exists( 'UM')) return '';
+    
+    if( is_admin()) return $language_locale;                                                // Remove this code line for browser language also at the UM Backend
+    if( !function_exists( 'UM')) return $language_locale;
 
     if( isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) && !empty( $_SERVER['HTTP_ACCEPT_LANGUAGE'] )) {
         $browser_language_code = str_replace( '-', '_', substr( sanitize_text_field( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ), 0, 5 ));
