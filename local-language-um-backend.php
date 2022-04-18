@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ultimate Member - Local Language Backend/Frontend
  * Description:     Extension to Ultimate Member for Addition of Browser or User Profile Local Language support to UM Backend and Frontend.
- * Version:         1.4.0
+ * Version:         1.4.1
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -97,7 +97,7 @@ function um_locale_language_setup_shortcode( $atts = array()) {
 
         if( array_key_exists( $locale_code, $language_form_id )) {
             
-            if( $locale_code != get_locale()) {
+            if( $locale_code != get_locale() && substr( $locale_code, 0, 2 ) != 'en' ) {
 
                 if( wp_script_is( 'um_datetime_locale' )) {
                     wp_deregister_script( 'um_datetime_locale' );
