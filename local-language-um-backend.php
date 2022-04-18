@@ -46,9 +46,9 @@ function my_um_language_locale_reply( $locale_code = false ) {
 
     if( !defined( 'ABSPATH' )) exit;
     
-    if( is_admin()) return $language_locale;                                                // Remove this code line for browser language also at the UM Backend
-    if( !function_exists( 'UM')) return $language_locale;
-
+    if( is_admin()) return $locale_code;                                                // Remove this code line for browser language also at the UM Backend
+    if( !function_exists( 'UM')) return $locale_code;
+    
     if( isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) && !empty( $_SERVER['HTTP_ACCEPT_LANGUAGE'] )) {
         $browser_language_code = str_replace( '-', '_', substr( sanitize_text_field( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ), 0, 5 ));
 
