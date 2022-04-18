@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ultimate Member - Local Language Backend/Frontend
  * Description:     Extension to Ultimate Member for Addition of Browser or User Profile Local Language support to UM Backend and Frontend.
- * Version:         1.3.0
+ * Version:         1.4.0
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -17,7 +17,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 //  Example shortcode: [um_locale_language_setup en_US 1025 fr_FR 1061]
 
-add_filter( 'locale', 'my_um_language_locale_fix', 10, 1 );           // Overrides language ID of the WordPress installation
+if ( !defined( 'DOING_CRON' ) ) {
+    add_filter( 'locale', 'my_um_language_locale_fix', 10, 1 );                             // Overrides language ID of the WordPress installation
+    add_filter( 'um_profile_locale__filter', 'my_um_language_locale_reply', 10, 1 );        // sets um_user( 'locale' ) replies to browser language
+    add_filter( 'um_profile_locale_empty__filter', 'my_um_language_locale_reply', 10, 1 );  // sets um_user( 'locale' ) replies to browser language
+    add_filter( 'um_language_locale', 'my_um_language_locale_reply', 10, 1 );               // Loads UM language text domain for UM backend and frontend
+}
 
 function my_um_language_locale_fix( $language_locale ) {
 
@@ -25,7 +30,7 @@ function my_um_language_locale_fix( $language_locale ) {
 
     if( isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) && !empty( $_SERVER['HTTP_ACCEPT_LANGUAGE'] )) {
         $browser_language_code = str_replace( '-', '_', sanitize_text_field( substr( $_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5 )));
-        
+
         if( in_array( $browser_language_code, get_available_languages())) {
             return $browser_language_code;
         }
@@ -34,10 +39,6 @@ function my_um_language_locale_fix( $language_locale ) {
     require_once( ABSPATH . 'wp-includes/pluggable.php' );
     return get_user_locale();
 }
-
-add_filter( 'um_profile_locale__filter', 'my_um_language_locale_reply', 10, 1 );        // sets um_user( 'locale' ) replies to browser language
-add_filter( 'um_profile_locale_empty__filter', 'my_um_language_locale_reply', 10, 1 );  // sets um_user( 'locale' ) replies to browser language
-add_filter( 'um_language_locale', 'my_um_language_locale_reply', 10, 1 );               // Loads UM language text domain for UM backend and frontend
 
 function my_um_language_locale_reply( $locale_code = false ) {
 
