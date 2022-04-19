@@ -15,9 +15,12 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+define( 'BROWSER_LANGUAGE_BACKEND', true );
+
 //  Example shortcode: [um_locale_language_setup en_US 1025 fr_FR 1061]
 
 if ( !defined( 'DOING_CRON' ) ) {
+    
     add_filter( 'locale', 'my_um_language_locale_fix', 10, 1 );                             // Overrides language ID of the WordPress installation
     add_filter( 'um_profile_locale__filter', 'my_um_language_locale_reply', 10, 1 );        // sets um_user( 'locale' ) replies to browser language
     add_filter( 'um_profile_locale_empty__filter', 'my_um_language_locale_reply', 10, 1 );  // sets um_user( 'locale' ) replies to browser language
@@ -26,7 +29,7 @@ if ( !defined( 'DOING_CRON' ) ) {
 
 function my_um_language_locale_fix( $language_locale ) {
 
-    if( is_admin()) return $language_locale;            // Remove this code line for browser language also at the UM Backend
+    if( is_admin() && ! BROWSER_LANGUAGE_BACKEND ) return $language_locale;
 
     if( isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) && !empty( $_SERVER['HTTP_ACCEPT_LANGUAGE'] )) {
         $browser_language_code = str_replace( '-', '_', sanitize_text_field( substr( $_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5 )));
@@ -46,9 +49,9 @@ function my_um_language_locale_reply( $locale_code = false ) {
 
     if( !defined( 'ABSPATH' )) exit;
     
-    if( is_admin()) return $locale_code;                                                // Remove this code line for browser language also at the UM Backend
-    if( !function_exists( 'UM')) return $locale_code;
-    
+    if( is_admin() && ! BROWSER_LANGUAGE_BACKEND ) return $locale_code;
+    if( !function_exists( 'UM' )) return $locale_code;
+
     if( isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) && !empty( $_SERVER['HTTP_ACCEPT_LANGUAGE'] )) {
         $browser_language_code = str_replace( '-', '_', substr( sanitize_text_field( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ), 0, 5 ));
 
@@ -95,10 +98,10 @@ function um_locale_language_setup_shortcode( $atts = array()) {
 
     if( !empty( $language_form_id ) && count( $language_form_id ) > 0) {
  
-        $locale_code = my_um_language_locale_reply();   
+        $locale_code = my_um_language_locale_reply();
 
         if( array_key_exists( $locale_code, $language_form_id )) {
-            
+
             if( $locale_code != get_locale() && substr( $locale_code, 0, 2 ) != 'en' ) {
 
                 if( wp_script_is( 'um_datetime_locale' )) {
