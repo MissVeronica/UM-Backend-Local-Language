@@ -1,7 +1,9 @@
 # UM Backend & Frontend Local Language from Browser setting
 Extension to Ultimate Member for Addition of User Profile Local or Browser Language support to UM Backend and Frontend.
 
-The language selected in the WP User Profile setup is used and if not found the Browser Language is being used for UM Frontend/Backend if a local language file is available otherwise the WP site language. This language switch is valid for all UM Pages including UM Form Designer Pages Profile, Login, Registration and Password reset and Account Pages.
+The language selected in the WP User Profile setup is used and if not found the Browser Language is being used for UM Frontend/Backend if a local language file is available otherwise the WP site language. 
+
+This language switch is valid for all UM Pages including UM Form Designer Pages: Login, Registration, Profile, Password reset and Account Page.
 ## Shortcode for selecting custom localized UM Forms
 Additional shortcode for customizing the Frontend where the user designed UM Pages with form id's can be selected depending on the user language code. Pages designed for different language requirements can be hosted on the same URL (WP Page) and the shortcode displays the page according to the user configured custom WP language or user browser language. If none of these languages are available page language defaults to the WP site language. There is no limit on the number of language pages linked by this shortcode.
 
