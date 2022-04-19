@@ -15,7 +15,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'BROWSER_LANGUAGE_BACKEND', true );
+define( 'UM_BROWSER_LANGUAGE_BACKEND', true );      // UM Backend use of the browser language
 
 //  Example shortcode: [um_locale_language_setup en_US 1025 fr_FR 1061]
 
@@ -29,7 +29,7 @@ if ( !defined( 'DOING_CRON' ) ) {
 
 function my_um_language_locale_fix( $language_locale ) {
 
-    if( is_admin() && ! BROWSER_LANGUAGE_BACKEND ) return $language_locale;
+    if( is_admin() && ! UM_BROWSER_LANGUAGE_BACKEND ) return $language_locale;
 
     if( isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) && !empty( $_SERVER['HTTP_ACCEPT_LANGUAGE'] )) {
         $browser_language_code = str_replace( '-', '_', sanitize_text_field( substr( $_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5 )));
@@ -49,7 +49,7 @@ function my_um_language_locale_reply( $locale_code = false ) {
 
     if( !defined( 'ABSPATH' )) exit;
     
-    if( is_admin() && ! BROWSER_LANGUAGE_BACKEND ) return $locale_code;
+    if( is_admin() && ! UM_BROWSER_LANGUAGE_BACKEND ) return $locale_code;
     if( !function_exists( 'UM' )) return $locale_code;
 
     if( isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) && !empty( $_SERVER['HTTP_ACCEPT_LANGUAGE'] )) {
