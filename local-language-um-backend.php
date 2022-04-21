@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ultimate Member - Local Language Backend/Frontend
  * Description:     Extension to Ultimate Member for Addition of Browser or User Profile Local Language support to UM Backend and Frontend.
- * Version:         1.4.4
+ * Version:         2.0.0
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -17,31 +17,59 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 define( 'UM_BROWSER_LANGUAGE_BACKEND', true );      // UM Backend use of the browser language
 
-//  Example shortcode: [um_locale_language_setup en_US 1025 fr_FR 1061]
+
+//  Example shortcode:  [um_locale_language_setup en_US 1025 fr_FR 1061]
+
 
 if ( !defined( 'DOING_CRON' ) ) {
-    
-    add_filter( 'locale', 'my_um_language_locale_fix', 10, 1 );                             // Overrides language ID of the WordPress installation
-    add_filter( 'um_profile_locale__filter', 'my_um_language_locale_reply', 10, 1 );        // sets um_user( 'locale' ) replies to browser language
-    add_filter( 'um_profile_locale_empty__filter', 'my_um_language_locale_reply', 10, 1 );  // sets um_user( 'locale' ) replies to browser language
-    add_filter( 'um_language_locale', 'my_um_language_locale_reply', 10, 1 );               // Loads UM language text domain for UM backend and frontend
+
+    add_filter( 'locale',                          'my_um_language_locale_fix', 10, 1 );            // Overrides language ID of the WordPress installation
+    add_filter( 'determine_locale',                'my_um_language_locale_fix', 10, 1 );
+    add_filter( 'um_profile_locale__filter',       'my_um_language_locale_reply', 10, 1 );          // sets um_user( 'locale' ) replies to browser language
+    add_filter( 'um_profile_locale_empty__filter', 'my_um_language_locale_reply', 10, 1 );          // sets um_user( 'locale' ) replies to browser language
+    add_filter( 'um_language_locale',              'my_um_language_locale_reply', 10, 1 );          // Loads UM language text domain for UM backend and frontend
 }
 
 function my_um_language_locale_fix( $language_locale ) {
 
+    global $browser_um_language_locale;
+
     if( is_admin() && ! UM_BROWSER_LANGUAGE_BACKEND ) return $language_locale;
+    if( isset( $browser_um_language_locale ) && !empty( $browser_um_language_locale )) return $browser_um_language_locale;
 
     if( isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) && !empty( $_SERVER['HTTP_ACCEPT_LANGUAGE'] )) {
-        $browser_language_code = str_replace( '-', '_', sanitize_text_field( substr( $_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5 )));
 
-        if( in_array( $browser_language_code, get_available_languages())) {
+        $browser_language_codes = explode( ',', str_replace( '-', '_', sanitize_text_field( $_SERVER['HTTP_ACCEPT_LANGUAGE'] )));
+        $result = array();
+
+        foreach( $browser_language_codes as $browser_language_code ) {
+            $lang = explode( ';q=', $browser_language_code );
+            $result[$lang[0]] = isset( $lang[1] ) ? floatval( $lang[1] ) : 1;
+        }
+
+        arsort( $result );
+        $browser_language_codes = array_keys( $result );
+
+        $find = '';
+        foreach( $browser_language_codes as $browser_language_code ) {
+            if( !empty( $find )) { 
+                if( substr( $browser_language_code, 0, 3 ) == $find ) break;
+                else continue;
+            }
+            if( strlen( $browser_language_code ) == 5 ) break;
+            else $find = $browser_language_code . '_';
+        }
+
+        $available_languages = array_merge( get_available_languages(), array( 'en_US' ));
+
+        if( in_array( $browser_language_code, $available_languages )) {
+            $browser_um_language_locale = $browser_language_code;
+
             return $browser_language_code;
         }
     }
 
     return $language_locale;
-    //require_once( ABSPATH . 'wp-includes/pluggable.php' );
-    //return get_user_locale();
 }
 
 function my_um_language_locale_reply( $locale_code = false ) {
@@ -49,16 +77,10 @@ function my_um_language_locale_reply( $locale_code = false ) {
     global $current_user;
 
     if( !defined( 'ABSPATH' )) exit;
-    
+
     if( is_admin() && ! UM_BROWSER_LANGUAGE_BACKEND ) return $locale_code;
-    if( !function_exists( 'UM' )) return $locale_code;
 
-    if( isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) && !empty( $_SERVER['HTTP_ACCEPT_LANGUAGE'] )) {
-        $browser_language_code = str_replace( '-', '_', substr( sanitize_text_field( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ), 0, 5 ));
-
-        if( !in_array( $browser_language_code, get_available_languages())) $browser_language_code = false;
-
-    } else $browser_language_code = false;
+    $browser_language_code = my_um_language_locale_fix( $locale_code );
 
     if( !empty( $current_user->ID )) $user_locale = get_user_meta( $current_user->ID, 'locale', true );
     else $user_locale = false;
@@ -101,6 +123,8 @@ function um_locale_language_setup_shortcode( $atts = array()) {
  
         $locale_code = my_um_language_locale_reply();
 
+        if( empty( $locale_code )) return '';
+
         if( array_key_exists( $locale_code, $language_form_id )) {
 
             if( $locale_code != get_locale() && substr( $locale_code, 0, 2 ) != 'en' ) {
@@ -122,7 +146,7 @@ function um_locale_language_setup_shortcode( $atts = array()) {
             return do_shortcode( '[ultimatemember form_id="'. $language_form_id[$locale_code] . '"]' );
         }
 
-        return sprintf( __( 'Invalid language code "%s"', 'ultimate-member' ), $locale_code );
+        return sprintf( __( 'Invalid language code " %s "', 'ultimate-member' ), $locale_code );
     } 
 
     return __( 'No language codes/form ids', 'ultimate-member' );    
