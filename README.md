@@ -9,14 +9,17 @@ Additional shortcode for customizing the Frontend where the user designed UM Pag
 
 The shortcode can be used for UM Registration Forms, Profile Forms, Member Directory Forms and Login Forms.
 
-Shortcode example: [um_locale_language_setup en_US 1025 fr_FR 1061]
+Shortcode example: <code>[um_locale_language_setup en_US 1025 fr_FR 1061]</code>
 
 The Form with id 1025 is used for US English users and the Form with id 1061 for French speaking users. For other languages the default site language is being used. This is the only available format with a language code followed by a space and the Form id without quotes and equal signs or separating commas or new lines.
 
-This example may be used to replace a page with current UM basic shortcode like: [ultimatemember form_id="1061"]
+This example may be used to replace a page with current UM basic shortcode like: <code>[ultimatemember form_id="1061"]</code>
+## Setting for only backend browser language
+Change line 18 to be true.
 
+<code>define( 'UM_BROWSER_LANGUAGE_BACKEND', true );</code> 
 ## Installation
-1. Create a plugin sub directory  /plugins/local-language-um-backend 
+1. Create a plugin sub directory  <code>/plugins/local-language-um-backend</code> 
 2. Upload the script to the sub directory with the script name "local-language-um-backend.php"
 3. Activate the Plugin "Ultimate Member - Local Language Backend/Frontend"
 
