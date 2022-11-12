@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ultimate Member - Local Language Backend/Frontend
  * Description:     Extension to Ultimate Member for Addition of Browser or User Profile Local Language support to UM Backend and Frontend.
- * Version:         2.0.0
+ * Version:         2.1.0
  * Requires PHP:    7.4
  * Author:          Miss Veronica
  * License:         GPL v2 or later
@@ -16,9 +16,11 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 define( 'UM_BROWSER_LANGUAGE_BACKEND', true );      // UM Backend use of the browser language
-
+define( 'UM_BROWSER_LANGUAGE_FRONTEND', false );
 
 //  Example shortcode:  [um_locale_language_setup en_US 1025 fr_FR 1061]
+
+//  https://slowlymusic.net/
 
 
 if ( !defined( 'DOING_CRON' ) ) {
@@ -34,9 +36,12 @@ function my_um_language_locale_fix( $language_locale ) {
 
     global $browser_um_language_locale;
 
-    if( is_admin() && ! UM_BROWSER_LANGUAGE_BACKEND ) return $language_locale;
-    if( isset( $browser_um_language_locale ) && !empty( $browser_um_language_locale )) return $browser_um_language_locale;
-
+    if( is_admin()) {
+        if( ! UM_BROWSER_LANGUAGE_BACKEND ) return $language_locale;
+    } else {
+        if( ! UM_BROWSER_LANGUAGE_FRONTEND ) return $language_locale;
+        if( isset( $browser_um_language_locale ) && !empty( $browser_um_language_locale )) return $browser_um_language_locale;
+    }
     if( isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) && !empty( $_SERVER['HTTP_ACCEPT_LANGUAGE'] )) {
 
         $browser_language_codes = explode( ',', str_replace( '-', '_', sanitize_text_field( $_SERVER['HTTP_ACCEPT_LANGUAGE'] )));
